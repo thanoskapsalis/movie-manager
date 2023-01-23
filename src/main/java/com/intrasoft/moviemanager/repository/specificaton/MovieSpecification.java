@@ -18,7 +18,8 @@ import java.util.Map;
 @Service
 public class MovieSpecification implements Specification<Movie> {
 
-    private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+    private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter
+            .ofPattern("yyyy-MM-dd'T'HH:mm:ss");
     private Map<String, Object> filters = new HashMap<>();
     public void passFilters(HashMap<String, Object> filters) {
         this.filters = filters;

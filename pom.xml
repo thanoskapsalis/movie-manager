@@ -147,7 +147,7 @@
                         <exclude>**/constants/**</exclude>
                         <exclude>**/enums/**</exclude>
                         <exclude>**/exception/**</exclude>
-                        <exclude>com/intrasoft/moviemanager/DocumentManagerApplication.class</exclude>
+                        <exclude>com/intrasoft/moviemanager/MovieManagerApplication.class</exclude>
                         <exclude>com/intrasoft/moviemanager/configuration/**</exclude>
                     </excludes>
                 </configuration>
