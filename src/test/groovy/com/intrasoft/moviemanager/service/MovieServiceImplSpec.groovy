@@ -12,6 +12,7 @@ import com.intrasoft.moviemanager.service.implementations.MovieServiceImpl
 import com.intrasoft.moviemanager.service.implementations.ReviewServiceImpl
 import spock.lang.Specification
 
+import javax.swing.text.html.Option
 import java.nio.file.NoSuchFileException
 import java.time.LocalDateTime
 
@@ -31,7 +32,7 @@ class MovieServiceImplSpec extends Specification {
     def setup() {
         movieRepository = Mock()
         reviewRepository = Mock()
-        reviewService = new ReviewServiceImpl(reviewRepository)
+        reviewService = Mock()
         movieService = new MovieServiceImpl(movieRepository, reviewService)
 
         reviewDto = ReviewDto.builder()
@@ -152,7 +153,8 @@ class MovieServiceImplSpec extends Specification {
 
         Long id = 1;
         1 * movieRepository.findById(1) >> Optional.of(movie)
-        1 * reviewRepository.save(_) >> review
+        1 * reviewService.createReview(_) >> reviewDtoWithMovie
+        1 * movieRepository.save(_) >> movie
 
         when:
         def result = movieService.reviewMovie(id, reviewDtoWithMovie)
@@ -225,7 +227,7 @@ class MovieServiceImplSpec extends Specification {
         ReviewDto reviewWithMovieDto = ReviewMapper.INSTANCE.reviewToReviewDto(reviewWithMovie)
 
         1 * movieRepository.findById(1) >> Optional.of(movie2)
-        1 * reviewService.updateReview(_, _) >> reviewDto
+        1 * reviewService.updateReview(1, reviewWithMovieDto) >> reviewWithMovieDto
 
         when:
         movie2.getMovieReviews().add(reviewWithMovie)
