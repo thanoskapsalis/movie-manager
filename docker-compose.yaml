@@ -1,0 +1,18 @@
+version: '1'
+
+services:
+  movie-project-db:
+    container_name: movie-project
+    ports:
+      - "1521:1521"
+      - "5500:5500"
+    volumes:
+      - ./src/main/resources/db/scripts:/home/oracle/setup/custom_scripts
+    networks:
+      - movie-project-network
+    restart: unless-stopped
+
+
+networks:
+  movie-project-network:
+    driver: bridge
