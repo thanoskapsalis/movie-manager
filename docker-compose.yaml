@@ -1,10 +1,10 @@
 version: '1'
 
 services:
-  movie-project-db:
+  movie-project:
     container_name: movie-project
     build:
-      context: src\main\java\resources\db
+      context: src\main\resources\db
     ports:
       - "1521:1521"
       - "5500:5500"

@@ -70,7 +70,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
             NoSuchFileException noSuchFileException,
             WebRequest webRequest
     ) {
-        // We get the error message that occured inside the controller and print it at the response
+        // We get the error message that occurred inside the controller and print it at the response
         String bodyOfResponse = noSuchFileException.getMessage();
 
         // Log the errors at the console
