@@ -37,9 +37,3 @@ SID: ORCLCDB
 Username & password: movie_manager_db
 
 The app is running at port 8081
-
-## Docker image build and push
-mvn jib:build
-# Optional if you want to specify the image tag. The default value is hosted in the properties
-mvn jib:build -Ddocker.image.tag=
-
