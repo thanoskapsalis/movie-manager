@@ -6,10 +6,10 @@ servers:
 - url: http://localhost:8080
   description: Generated server url
 paths:
-  /movies/{movieId}/reviews/{reviewId}:
+  /reviews/{movieId}/reviews/{reviewId}:
     put:
       tags:
-      - movie-controller
+      - review-controller
       operationId: updateMovieReview
       parameters:
       - name: movieId
@@ -39,7 +39,7 @@ paths:
                 $ref: '#/components/schemas/ReviewDto'
     delete:
       tags:
-      - movie-controller
+      - review-controller
       operationId: deleteMovieReview
       parameters:
       - name: movieId
@@ -60,7 +60,7 @@ paths:
           content:
             '*/*':
               schema:
-                type: string
+                type: object
   /movies/{id}:
     get:
       tags:
@@ -121,7 +121,32 @@ paths:
           content:
             '*/*':
               schema:
-                type: string
+                type: object
+  /reviews/{id}/reviews:
+    post:
+      tags:
+      - review-controller
+      operationId: createMovieReview
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReviewDto'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ReviewDto'
   /movies:
     get:
       tags:
@@ -153,31 +178,6 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/MovieDto'
-  /movies/{id}/reviews:
-    post:
-      tags:
-      - movie-controller
-      operationId: createMovieReview
-      parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: integer
-          format: int64
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ReviewDto'
-        required: true
-      responses:
-        "200":
-          description: OK
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/ReviewDto'
   /reviews:
     get:
       tags:

@@ -61,17 +61,18 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     /**
      * Handles error that produced when a resource that asked is not available
      *
-     * @param noSuchFileException
+     * @param NotFoundException
      * @param webRequest
      * @return
      */
+    //DK Here i prefer to create a custom exception(NotFoundException) or runtime exception because NoSuchFileException is irrelevant
     @ExceptionHandler(value = {NoSuchFileException.class})
     protected ResponseEntity<Object> handleIOException(
-            NoSuchFileException noSuchFileException,
+            NotFoundException notFoundException,
             WebRequest webRequest
     ) {
         // We get the error message that occurred inside the controller and print it at the response
-        String bodyOfResponse = noSuchFileException.getMessage();
+        String bodyOfResponse = notFoundException.getMessage();
 
         // Log the errors at the console
         log.error("Item not found error: " + bodyOfResponse);

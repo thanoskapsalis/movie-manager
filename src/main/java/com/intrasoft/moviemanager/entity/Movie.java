@@ -23,7 +23,11 @@ public class Movie {
     private String movieName;
     private String description;
     private LocalDateTime timeCreated;
-    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Review> movieReviews = new ArrayList<Review>();
+    @OneToMany(mappedBy = "movie",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    @Builder.Default
+    private List<Review> movieReviews = new ArrayList();
 
 }

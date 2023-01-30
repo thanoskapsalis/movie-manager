@@ -1,8 +1,6 @@
 package com.intrasoft.moviemanager.controller
 
 import com.intrasoft.moviemanager.dto.MovieDto
-import com.intrasoft.moviemanager.dto.ReviewDto
-import com.intrasoft.moviemanager.entity.Movie
 import com.intrasoft.moviemanager.service.implementations.MovieServiceImpl
 import org.springframework.http.HttpStatus
 import spock.lang.Specification
@@ -91,19 +89,6 @@ class MovieControllerSpec extends Specification {
 
     }
 
-    def "test createMovieReview"() {
-        given:
-        def reviewDto = ReviewDto.builder().build()
-        Long id = 1
-
-        when:
-        def response = controller.createMovieReview(id, reviewDto);
-
-        then:
-        response.getStatusCode() == HttpStatus.OK
-
-    }
-
     def "test updateMovie"() {
         given:
         def movieDto = MovieDto.builder().build()
@@ -111,18 +96,6 @@ class MovieControllerSpec extends Specification {
 
         when:
         def response = controller.updateMovie(id, movieDto)
-
-        then:
-        response.getStatusCode() == HttpStatus.OK
-    }
-
-    def "test updateMovieReview"() {
-        given:
-        def reviewDto = ReviewDto.builder().build()
-        Long id = 1
-
-        when:
-        def response = controller.updateMovieReview(id, id, reviewDto)
 
         then:
         response.getStatusCode() == HttpStatus.OK
@@ -136,18 +109,7 @@ class MovieControllerSpec extends Specification {
         def response = controller.deleteMovie(id)
 
         then:
-        response.getStatusCode() == HttpStatus.OK
-    }
-
-    def "test deleteMovieReview"() {
-        given:
-        Long id = 1
-
-        when:
-        def response = controller.deleteMovieReview(id, id)
-
-        then:
-        response.getStatusCode() == HttpStatus.OK
+        response.getStatusCode() == HttpStatus.NO_CONTENT
     }
 
 }

@@ -19,6 +19,7 @@ public class Review {
     private String reviewerName;
     private String reviewTitle;
     private String reviewContent;
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "movie_id")
     private Movie movie;
 }

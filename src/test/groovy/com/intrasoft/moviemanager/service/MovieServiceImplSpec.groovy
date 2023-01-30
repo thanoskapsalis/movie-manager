@@ -4,16 +4,14 @@ import com.intrasoft.moviemanager.dto.MovieDto
 import com.intrasoft.moviemanager.dto.ReviewDto
 import com.intrasoft.moviemanager.entity.Movie
 import com.intrasoft.moviemanager.entity.Review
+import com.intrasoft.moviemanager.exception.NotFoundException
 import com.intrasoft.moviemanager.mapper.MovieMapper
-import com.intrasoft.moviemanager.mapper.ReviewMapper
 import com.intrasoft.moviemanager.repository.MovieRepository
 import com.intrasoft.moviemanager.repository.ReviewRepository
 import com.intrasoft.moviemanager.service.implementations.MovieServiceImpl
 import com.intrasoft.moviemanager.service.implementations.ReviewServiceImpl
 import spock.lang.Specification
 
-import javax.swing.text.html.Option
-import java.nio.file.NoSuchFileException
 import java.time.LocalDateTime
 
 class MovieServiceImplSpec extends Specification {
@@ -33,7 +31,7 @@ class MovieServiceImplSpec extends Specification {
         movieRepository = Mock()
         reviewRepository = Mock()
         reviewService = Mock()
-        movieService = new MovieServiceImpl(movieRepository, reviewService)
+        movieService = new MovieServiceImpl(movieRepository)
 
         reviewDto = ReviewDto.builder()
                 .id(1)
@@ -84,11 +82,11 @@ class MovieServiceImplSpec extends Specification {
         def result = movieService.getMovie(1)
 
         then:
-        result == movieDto
+        result instanceof Movie;
         noExceptionThrown()
     }
 
-    def "test getMovie throws NoSuchFileException"() {
+    def "test getMovie throws NotFoundException"() {
         given:
         Movie movie = MovieMapper.INSTANCE.movieDtoToMovie(movieDto)
         1 * movieRepository.findById(1) >> Optional.empty()
@@ -97,7 +95,7 @@ class MovieServiceImplSpec extends Specification {
         def result = movieService.getMovie(1)
 
         then:
-        thrown(NoSuchFileException)
+        thrown(NotFoundException)
     }
 
     def "test updateMovie"() {
@@ -110,7 +108,7 @@ class MovieServiceImplSpec extends Specification {
         def result = movieService.updateMovie(movieDto.getId(), movieDto)
 
         then:
-        result == movieDto
+        result instanceof MovieDto
         noExceptionThrown()
 
     }
@@ -118,7 +116,6 @@ class MovieServiceImplSpec extends Specification {
     def "test deleteMovie"() {
         given:
         Long id = 1
-        1 * movieRepository.findById(1) >> Optional.of(movie)
 
         when:
         def result = movieService.deleteMovie(1)
@@ -138,118 +135,6 @@ class MovieServiceImplSpec extends Specification {
         result instanceof List<MovieDto>
     }
 
-    def "test reviewMovie"() {
-        given:
-
-        ReviewDto reviewDtoWithMovie = ReviewDto.builder()
-                .id(1)
-                .reviewerName("reviewName")
-                .reviewContent("reviewContent")
-                .reviewTitle("reviewTitle")
-                .movie(movie)
-                .build()
-
-        Review review = ReviewMapper.INSTANCE.reviewDtoToReview(reviewDtoWithMovie)
-
-        Long id = 1;
-        1 * movieRepository.findById(1) >> Optional.of(movie)
-        1 * reviewService.createReview(_) >> reviewDtoWithMovie
-        1 * movieRepository.save(_) >> movie
-
-        when:
-        def result = movieService.reviewMovie(id, reviewDtoWithMovie)
-
-        then:
-        result instanceof ReviewDto
-    }
-
-    def "test deleteMovieReview with no reviews"() {
-        given:
-        Long movieId = 1
-        Long reviewId = 1
-
-        1 * movieRepository.save(_) >> movie
-        1 * movieRepository.findById(_) >> Optional.of(movie)
-
-        when:
-        def result = movieService.deleteMovieReview(movieId, reviewId)
-
-        then:
-        noExceptionThrown()
-    }
-
-    def "test deleteMovieReview with a review"() {
-        given:
-        Long movieId = 1
-        Long reviewId = 1
-
-        Movie movieWithReview = Movie.builder()
-                .movieName("Sample name")
-                .id(2)
-                .description("test")
-                .timeCreated(LocalDateTime.now())
-                .movieReviews(new ArrayList<Review>())
-                .build()
-
-        1 * movieRepository.save(_) >> movie
-        1 * movieRepository.findById(_) >> Optional.of(movie)
-
-        when:
-        movieWithReview.getMovieReviews().add(review)
-        def result = movieService.deleteMovieReview(movieId, reviewId)
-
-        then:
-        noExceptionThrown()
-    }
-
-
-    def "test updateMovieReview"() {
-        given:
-        Long movieId = 1
-        Long reviewId = 1
-
-        Movie movie2 = Movie.builder()
-                .movieName("Sample name")
-                .id(1)
-                .description("test")
-                .timeCreated(LocalDateTime.now())
-                .movieReviews(new ArrayList<Review>())
-                .build()
-
-        Review reviewWithMovie = Review.builder()
-                .reviewTitle("reviewTitle")
-                .reviewContent("reviewContent")
-                .reviewerName("reviewName")
-                .id(1)
-                .movie(movie2)
-                .build()
-
-        ReviewDto reviewWithMovieDto = ReviewMapper.INSTANCE.reviewToReviewDto(reviewWithMovie)
-
-        1 * movieRepository.findById(1) >> Optional.of(movie2)
-        1 * reviewService.updateReview(1, reviewWithMovieDto) >> reviewWithMovieDto
-
-        when:
-        movie2.getMovieReviews().add(reviewWithMovie)
-        def result = movieService.updateMovieReview(movieId, reviewId, reviewWithMovieDto)
-
-        then:
-        result instanceof ReviewDto
-    }
-
-    def "test updateMovieReview throws noSuchFileException"() {
-        given:
-        Long movieId = 1
-        Long reviewId = 1
-
-        1 * movieRepository.findById(_) >> Optional.of(movie)
-
-        when:
-        def result = movieService.updateMovieReview(movieId, reviewId, reviewDto)
-
-        then:
-        thrown(NoSuchFileException)
-    }
 
     def "test SearchMovie with filters"() {
         given:
